@@ -33,7 +33,6 @@ const List = () => {
     }, []);
 
     useEffect(() => {
-        // Filter park list based on search text
         const filteredList = parkListData.filter(park =>
             park.name.toLowerCase().includes(searchText.toLowerCase())
         );
@@ -41,7 +40,7 @@ const List = () => {
     }, [searchText, parkListData]);
 
     const handleSearch = () => {
-        // No action needed here since filtering is done in useEffect
+        
     };
 
     return (

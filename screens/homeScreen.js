@@ -108,7 +108,7 @@ useFocusEffect(
           </View>
           <TouchableOpacity  onPress={() => navigation.navigate('Payment', { orderId: parkingOrder.id })}>
             <Text style={parkingOrder.order_cost ? { color: 'red' } : { color: 'green' }}>
-              {parkingOrder.order_cost ? 'Cancel' : 'Pay'}
+              {parkingOrder.order_cost ? 'Цуцлах' : 'Төлөх'}
             </Text>
           </TouchableOpacity>
 

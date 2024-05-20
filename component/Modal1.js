@@ -4,15 +4,17 @@ import OrderView from './orderView';
 import OrderInfo from './orderInfo';
 import OrderPlatNumber from './orderPlatNumber';
 import * as SecureStore from 'expo-secure-store';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import api from '../api';
 
 function ModalScreen() {
   const [parkListData, setParkingData] = useState(null);
   const [render, setRender] = useState('order_info');
   const [platNumber, setPlatNumber] = useState('');
+  const [error, setError] = useState(null);  // New state for error message
   const route = useRoute();
-  
+  const navigation = useNavigation();
+
   const submitData = async (parkId, car_number) => {
     try {
       const token = await SecureStore.getItemAsync("userToken");
@@ -23,17 +25,16 @@ function ModalScreen() {
           Authorization: `Bearer ${token}`
         }
       });
+      navigation.navigate('Home');
       return response;
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
-        console.error("Server Error:", error.response.data.message);
+        setError(error.response.data.message);  // Set error message
       } else {
-        console.error("Error submitting data:", error);
+        setError("Error submitting data");
       }
     }
   };
-  
-  
 
   useEffect(() => {
     const fetchData = async (parkId) => {
@@ -66,7 +67,7 @@ function ModalScreen() {
 
   const conditionalRender = () => {
     if (!parkListData) {
-      return null; // Render nothing until data is fetched
+      return null; 
     }
     if (render === 'order_info') {
       return <OrderInfo 
@@ -80,12 +81,14 @@ function ModalScreen() {
       />;
     } else if (render === 'order_view') {
       return <OrderView
-       PlatNumber={platNumber} 
-       ParkName={parkListData.name}
-       ParkClosingTime={parkListData.closing_time}
+        PlatNumber={platNumber} 
+        ParkName={parkListData.name}
+        ParkClosingTime={parkListData.closing_time}
         ParkOpeningTime={parkListData.opening_time}
         ParkCost={parkListData.payment_per_hour}
-       onPress={() => submitData(parkListData.id, platNumber)}/>;
+        onPress={() => submitData(parkListData.id, platNumber)}
+        error={error}  // Pass error message as prop
+      />;
     } else {
       return <OrderPlatNumber onPress={goOrder} setPlatNumber={setPlatNumber} />;
     }

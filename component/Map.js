@@ -114,7 +114,7 @@ export default function Map() {
               </TouchableOpacity>
             </Marker>
           )}
-          {/* Render additional markers */}
+          {}
           {parkListData.map((park, index) => (
             <CustomMarker
               key={index}

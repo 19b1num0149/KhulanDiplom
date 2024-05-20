@@ -15,33 +15,26 @@ function LoginScreen({ navigation }) {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        // Make a POST request to your login API endpoint
+      
         api.post('/guest/auth', {
             phone: phone,
             password: password,
-            device_name: 'iphone', // Provide the device name
+            device_name: 'iphone', 
         })
         .then(response => {
-            // Handle successful login
             console.log('Login successful:', response.data);
             console.log(response.data.token);
-            // Save the token to secure store
             SecureStore.setItemAsync('userToken', response.data.token)
                 .then(() => {
-                    // Token saved successfully
                     console.log('Token saved successfully');
-                    // Navigate to HomeScreen or perform other actions as needed
                     navigation.navigate('Home');
                 })
                 .catch(error => {
-                    // Unable to save token
                     console.error('Error saving token:', error);
                 });
         })
         .catch(error => {
-            // Handle login error
             console.error('Login error:', error);
-            // Display an alert or perform other error handling
             Alert.alert('Login Error', 'Invalid phone number or password. Please try again.');
         });
     };
@@ -57,6 +50,7 @@ function LoginScreen({ navigation }) {
                 <Image source={require("../assets/logo.png")} />
                 <Text style={styles.Text}>UB PARKING</Text>
                 <View style={styles.row}>
+                    
                     <View style={styles.country}><Text>+976</Text></View>
                     <TextInput
                         placeholder='Утасны дугаар'
@@ -90,7 +84,10 @@ function LoginScreen({ navigation }) {
                         <Text>Бүртгүүлэх</Text>
                     </TouchableOpacity>
                 </View>
+
+                
 </View>
+
     </KeyboardAvoidingView>
 );
 }

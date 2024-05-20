@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import Axios from 'axios'; // Import Axios
-import * as SecureStore from 'expo-secure-store';
+import api from '../api'; // Import your API instance
 
 export default function RegisterScreen({ navigation }) {
     const [name, setName] = useState('');
@@ -11,49 +10,22 @@ export default function RegisterScreen({ navigation }) {
     const [password, setPassword] = useState('');
 
     const handleRegister = () => {
-        // Make a POST request to register the user
-        Axios.post('/guest/register-by-email', {
+        api.post('/guest/register-by-email', {
             name: name,
-            email: mail,
             phone: phone,
             password: password,
-            device_name: 'iphone', // Provide the device name
+            email: mail,
+            device_name: 'iphone', 
         })
         .then(response => {
-            // Handle successful registration
-            console.log('Registration successful:', response.data);
-            // Activate the account
-            activateAccount(mail); // Call the activateAccount function with email
-            // Save the token to secure store
-            SecureStore.setItemAsync('userToken', response.data.token)
-                .then(() => {
-                    // Token saved successfully
-                    console.log('Token saved successfully');
-                    // Navigate to HomeScreen or perform other actions as needed
-                    navigation.navigate('Home');
-                })
-                .catch(error => {
-                    // Unable to save token
-                    console.error('Error saving token:', error);
-                });
+            console.log('Register successful:', response.data);
+            Alert.alert('Амжилттай', 'Таны бүртгэл амжилттай хийгдлээ', [
+                { text: 'Үргэлжлүүлэх', onPress: () => navigation.navigate('Login') }
+            ]);
         })
         .catch(error => {
-            // Handle registration error
             console.error('Registration error:', error);
-            Alert.alert('Registration Error', 'Registration failed. Please try again.');
-        });
-    };
-
-    const activateAccount = (email) => {
-        // Make a POST request to activate the account
-        Axios.post('/guest/activate_account', { email: email })
-        .then(response => {
-            // Handle successful account activation
-            console.log('Account activation successful:', response.data.msg);
-        })
-        .catch(error => {
-            // Handle activation error
-            console.error('Account activation error:', error);
+            Alert.alert('Амжилтгүй', 'Бүртгэл амжилтгүй');
         });
     };
 

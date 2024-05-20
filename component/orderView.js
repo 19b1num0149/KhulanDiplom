@@ -1,29 +1,9 @@
-import React, { useState,useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const options = [12, 13, 14, 'uok'];
-
-const OrderView = (props) => {
-  const {ParkName, ParkClosingTime,ParkOpeningTime, ParkCost,TotalCapacity, CurrentCapacity, PlatNumber,onPress}=props;
+const OrderView = ({ ParkName, ParkClosingTime, ParkOpeningTime, ParkCost, PlatNumber, onPress, error }) => {
   const navigation = useNavigation();
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [inputNumber, setInputNumber] = useState('');
-  const [isValuesVisible, setIsValuesVisible] = useState(false);
-
-  const handleSelect = (option) => {
-    setSelectedOption(option);
-    setIsValuesVisible(false);
-  };
-
-  const handleInputChange = (text) => {
-    setInputNumber(text);
-    setIsValuesVisible(false);
-  };
-
-  const toggleValuesVisibility = () => {
-    setIsValuesVisible(!isValuesVisible);
-  };
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -43,53 +23,54 @@ const OrderView = (props) => {
           <Text style={styles.title}>{PlatNumber}</Text>
         </View>
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>Зогсоол:</Text>
-                <Text style={{color: 'blcak'}}>{ParkName}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text>Зогсоол:</Text>
+          <Text style={{ color: 'black' }}>{ParkName}</Text>
         </View>
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>ц хуваарь:</Text>
-                <Text style={{color: 'black'}}>{ParkOpeningTime} - {ParkClosingTime}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>Зогсоолын төлбөр:</Text>
-                <Text style={{color: 'black'}}>{ParkCost}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text>ц хуваарь:</Text>
+          <Text style={{ color: 'black' }}>{ParkOpeningTime} - {ParkClosingTime}</Text>
         </View>
 
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text>Зогсоолын төлбөр:</Text>
+          <Text style={{ color: 'black' }}>{ParkCost}</Text>
+        </View>
 
-        
-
-        
-
-        <View style={{  justifyContent: 'space-between', marginTop: 20 }}>
-             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>Захиалгын төлбөр:</Text>
-                <Text style={{color: 'black'}}>1 минут -> 50₮</Text>
+        <View style={{ justifyContent: 'space-between', marginTop: 20 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text>Захиалгын төлбөр:</Text>
+            <Text style={{ color: 'black' }}>1 минут -> 50₮</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text>Захиалгын цаг:</Text>
+            <Text style={{ color: 'black' }}>{currentTime.toLocaleTimeString()}</Text>
+          </View>
+          {error && (  // Conditionally render error message
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>Таны захиалга амжилтгүй боллоо. Хэрэглэгч эсвэл энэхүү машины дугаар идэвхтэй захиалгатай байна.</Text>
             </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>Захиалгын цаг:</Text>
-                <Text style={{color: 'black'}}>{currentTime.toLocaleTimeString()}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop:'30%'}}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.navigate('Home')}
-          >
-            <Text style={{ color: 'rgba(0, 0, 0, 0.5)' }}>Буцах</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={onPress}
-          >
-            <Text style={{ color: 'white' }}>Баталгаажуулах</Text>
-          </TouchableOpacity>
+          )}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '30%' }}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.navigate('Home')}
+            >
+              <Text style={{ color: 'rgba(0, 0, 0, 0.5)' }}>Буцах</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={onPress}
+            >
+              <Text style={{ color: 'white' }}>Баталгаажуулах</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
 export default OrderView;
 
@@ -140,26 +121,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  input: {
-    borderColor: 'grey',
-    borderRadius: 20,
-    borderWidth: 1,
-    padding: 10,
-    width: '50%'
-  },
-  dropdownContainer: {
-    maxHeight: 100,
-    marginLeft: 40,
+  errorContainer: {
     marginTop: 10,
-    borderWidth: 1,
-    borderColor: 'black'
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
-  dropdownItem: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    fontSize: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: 'grey'
-  }
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+  },
 });
-
